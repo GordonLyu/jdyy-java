@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jdyy.mapper.UserMapper" >
+    <sql id="all">
+
+    </sql>
+
+    <!--分页-->
+    <select id="getUserPage" resultType="com.jdyy.entity.User">
+        select * from user limit #{dataStart},#{pageSize};
+    </select>
+
+    <!--查所有用户总数-->
+    <select id="countUser" resultType="int">
+        select count(uid) from user;
+    </select>
+    
+    <!--查所有-->
+    <select id="getAll" resultType="com.jdyy.entity.User">
+        SELECT * FROM user;
+    </select>
+
+    <!--查一个用户-->
+    <select id="getUser" resultType="com.jdyy.entity.User">
+        SELECT * FROM user where uid=#{uid} or username=#{username};
+    </select>
+
+    <!--添加用户-->
+    <insert id="addUser">
+        insert into user values (#{uid},#{username},#{password},#{role});
+    </insert>
+
+    <!--删除用户-->
+    <delete id="removeUser">
+        delete from user where uid=#{uid};
+    </delete>
+
+    <!--修改用户-->
+    <update id="modifyUser">
+        update user
+        <set>
+            where
+            <if test="username!=null|uid!=''">
+                username=#{username}
+            </if>
+            <if test="password!=null|uid!=''">
+                password=#{password}
+            </if>
+        </set>
+            and uid=#{uid};
+    </update>
+
+    <select id="login" resultType="com.jdyy.entity.User">
+        select * from user where username=#{username} and password=#{password};
+    </select>
+</mapper>
