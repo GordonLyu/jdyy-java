@@ -2,7 +2,6 @@ package com.jdyy.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.jdyy.commons.util.Result;
-import com.jdyy.commons.util.Status;
 import com.jdyy.entity.User;
 import com.jdyy.entity.vo.Page;
 import com.jdyy.mapper.UserMapper;
@@ -16,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ *
+ * 用户 服务实现类
  *
  * @author LvXinming
  * @since 2022/10/13
@@ -31,7 +32,6 @@ public class UserServiceImpl implements UserService {
     public Result getUserPage(Page<User> page){
         Result result;
         List<User> users;
-
         //从第几条开始，-1是因为页数是从1开始，而查询的数据是从0开始
         int dataStart = (page.getPageNum()-1)*page.getPageSize();
         int allDataSum = userMapper.countUser();//所有数据
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
                 result = Result.success("获取分页正常",page);
             }
         }catch (Exception e){
-            e.printStackTrace();
+            e.printStackTrace();//打印错误信息
             result = Result.fail("获取分页异常");
         }
         return result;
@@ -60,9 +60,10 @@ public class UserServiceImpl implements UserService {
         Result result;
         try {
             List<User> users = userMapper.getAll();
-            result = Result.success(users);
+            result = Result.success(200,"成功获取所有用户",users);
         }catch (Exception e){
-            result = Result.fail(null);
+            e.printStackTrace();
+            result = Result.fail("获取所有用户失败");
         }
         return result;
     }
@@ -74,8 +75,12 @@ public class UserServiceImpl implements UserService {
         try {
             userMapper.addUser(user);
             result = new Result(200,"用户添加成功");
+        }catch (DuplicateKeyException e){
+            result = Result.fail("添加失败，用户已存在");
+            userMapper.fixAutoincrement();
         }catch (Exception e){
-            result = new Result(500,"用户添加失败");
+            e.printStackTrace();
+            result = Result.fail("用户添加失败");
             userMapper.fixAutoincrement();
         }
         return result;
@@ -85,15 +90,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result removeUser(User user) {
         Result result;
-        User aUser = userMapper.getUser(user);
+        User aUser = userMapper.getOneUser(user);
         try {
             if(aUser==null)
-                return new Result(500,"删除失败，未找到此用户");
+                return new Result(501,"删除失败，未找到此用户");
             userMapper.removeUser(user);
-            result = new Result(200,"用户删除成功");
+            result = Result.success("用户删除成功",null);
             //删除后ID号自增是否向前呢？这是个问题
-            userMapper.fixAutoincrement();
+//            userMapper.fixAutoincrement();
         }catch (Exception e){
+            e.printStackTrace();
             result = new Result(500,"用户删除失败");
         }
         return result;
@@ -110,10 +116,13 @@ public class UserServiceImpl implements UserService {
                 Map<String, Object> map = new HashMap<>();
                 map.put("user",user);//添加用户信息到data
                 map.put("token",StpUtil.getTokenInfo());//添加token到data
-                result = new Result(Status.SUCCESS,map);
+                result = new Result(200,"登录成功",map);
+            }else {
+                result = Result.fail("用户名或密码错误");
             }
         }catch (Exception e){
-            result = new Result(Status.UNKNOWN_FAIL);
+            e.printStackTrace();
+            result = Result.fail("登录失败");
         }
         return result;
     }
