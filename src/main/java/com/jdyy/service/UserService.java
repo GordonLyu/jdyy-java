@@ -21,7 +21,7 @@ public interface UserService {
     //添加用户
     Result addUser(User user);
 
-    //添加用户
+    //删除用户
     Result removeUser(User user);
 
     //登录

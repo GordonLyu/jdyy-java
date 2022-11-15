@@ -23,7 +23,7 @@
     </select>
 
     <!--查一个用户-->
-    <select id="getUser" resultType="com.jdyy.entity.User">
+    <select id="getOneUser" resultType="com.jdyy.entity.User">
         SELECT * FROM user where uid=#{uid} or username=#{username};
     </select>
 

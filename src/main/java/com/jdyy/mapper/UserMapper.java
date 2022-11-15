@@ -16,16 +16,16 @@ import java.util.List;
 public interface UserMapper {
 
     //分页查询
-    List<User> getUserPage(Page page);
+    List<User> getUserPage(Page<User> page);
 
-    //查用户总页数
+    //查用户总数
     int countUser();
 
     //查询所有
     List<User> getAll();
 
     //查一个用户
-    User getUser(User user);
+    User getOneUser(User user);
 
     //添加用户
     void addUser(User user);
@@ -35,7 +35,6 @@ public interface UserMapper {
 
     //登录
     User login(User user);
-
 
     /**
      * 为了解决添加失败后自增不连续的问题
