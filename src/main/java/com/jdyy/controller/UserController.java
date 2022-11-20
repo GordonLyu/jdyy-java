@@ -50,7 +50,15 @@ public class UserController {
     //删除用户
     @SaCheckLogin
     @PostMapping("/remove")
-    public Result removeUser(User user){
+    public Result removeUser(Integer uid){
+//        System.out.println(user);
+        System.out.println("ID为"+uid);
+        User user = new User();
+        user.setUid(uid);
+        if (uid==0){
+            return Result.fail("你无法删除超级管理员");
+        }
+
         return userService.removeUser(user);
     }
 

@@ -1,6 +1,7 @@
 package com.jdyy.entity;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * @author LvXinming
@@ -8,6 +9,7 @@ import lombok.Data;
  */
 
 @Data
+@ToString
 public class User {
     private int uid;//用户 ID
     private String username; //用户名
