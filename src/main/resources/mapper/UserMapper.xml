@@ -29,7 +29,7 @@
 
     <!--添加用户-->
     <insert id="addUser">
-        insert into user values (#{uid},#{username},#{password},#{role});
+        insert into user(username, password) values (#{username},#{password});
     </insert>
 
     <!--删除用户-->

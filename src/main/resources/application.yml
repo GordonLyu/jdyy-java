@@ -6,6 +6,10 @@ spring:
     url: jdbc:mysql:///jdyy
     username: root
     password: 123456
+  servlet:
+    multipart:
+      max-file-size: 30MB #最大文件大小
+      max-request-size: 40MB #最大请求大小
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
 sa-token:
