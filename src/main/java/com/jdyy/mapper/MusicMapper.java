@@ -34,6 +34,7 @@ public interface MusicMapper {
 
     //添加一首音乐
     @Insert("insert into music(music_name, cover_url, url, author) values(#{musicName},#{coverURL},#{url},#{author});")
+    //插入后获取音乐id
     @SelectKey(statement = {"SELECT LAST_INSERT_ID() as musicId"}, keyProperty = "musicId", before = false, resultType = int.class)
     void addMusic(Music music);
 

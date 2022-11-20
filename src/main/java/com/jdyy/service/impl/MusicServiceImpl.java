@@ -142,7 +142,32 @@ public class MusicServiceImpl implements MusicService {
             if(aMusic==null)
                 return new Result(501,"删除失败，未找到此音乐");
             musicMapper.removeMusic(music);
-            result = Result.success(200,"音乐删除成功",null);
+
+            //删除文件
+            String relativePath = MusicController.class.getClassLoader().getResource("").getPath();//获取绝对路径
+            relativePath = URLDecoder.decode(relativePath, StandardCharsets.UTF_8);//处理字符问题
+            String url = relativePath+"static/"+aMusic.getUrl();//获取音乐文件地址
+            String coverURL = relativePath+"static/"+aMusic.getCoverURL();//获取音乐封面图片地址
+
+            File musicFile = new File(url);//获取音乐文件名
+            File coverImage = new File(coverURL);//获取音乐封面图片名
+            String fileDeleteMsg = "文件删除情况：";
+            if(musicFile.delete()){
+                fileDeleteMsg += "音乐文件删除成功";
+                System.out.println("音乐文件删除成功");
+            }else{
+                fileDeleteMsg += "音乐文件不存在";
+                System.out.println("音乐文件不存在");
+            }
+            if(coverImage.delete()){
+                fileDeleteMsg += "，音乐封面删除成功";
+                System.out.println("音乐封面删除成功");
+            }else{
+                fileDeleteMsg += "，音乐封面不存在";
+                System.out.println("音乐封面不存在");
+            }
+
+            result = Result.success(200,"音乐删除成功",fileDeleteMsg);
         }catch (Exception e){
             e.printStackTrace();
             Map<String, Object> map = new HashMap<>();
@@ -159,10 +184,7 @@ public class MusicServiceImpl implements MusicService {
         return upload(file,null);
     }
 
-
-
-
-
+    //音乐文件和音乐封面图片上传
     public Result upload(MultipartFile file,Music music) {
         Result result;
         String originFileName = file.getOriginalFilename();//原始文件名
@@ -209,7 +231,7 @@ public class MusicServiceImpl implements MusicService {
 
             file.transferTo(new File(path,newFileName));
 
-            result = Result.success(200,"文件上传成功","music/"+(isImg?"img/":"audio/")+newFileName);
+            result = Result.success(200,"文件上传成功","music/"+(isImg?"cover/":"audio/")+newFileName);
         } catch (IOException e) {
             e.printStackTrace();
             result = Result.fail("文件上传失败",e.getMessage());
