@@ -2,13 +2,30 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.jdyy.mapper.UserMapper" >
-    <sql id="all">
+<mapper namespace="com.jdyy.mapper.MusicMapper" >
 
-    </sql>
+    <!--结果别名，对应实体类变量名-->
+<resultMap id="musicMap" type="com.jdyy.entity.Music">
+    <id column="music_id" property="musicId" />
+    <result column="music_name" property="musicName" />
+    <result column="cover_url" property="coverURL" />
+</resultMap>
 
-    <!--分页-->
-    <select id="getUserPage" resultType="com.jdyy.entity.User">
-        select * from music limit #{dataStart},#{pageSize};
-    </select>
+
+
+ <update id="modifyMusic">
+     update music
+         <set>
+             <if test="musicName!=null and musicName!=''">
+                music_name = #{musicName},
+             </if>
+             <if test="coverURL!=null and coverURL!=''">
+                cover_url = #{coverURL},
+             </if>
+             <if test="url!=null and url!=''">
+                url = #{url}
+             </if>
+        </set>
+     where music_id = #{musicId};
+ </update>
 </mapper>
