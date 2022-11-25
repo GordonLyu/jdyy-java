@@ -44,14 +44,14 @@ public class MusicController {
 
     //添加音乐
     @PostMapping("/add")
-    public Result addMusic(Music music, MultipartFile cover, MultipartFile musicFile){
-        return musicService.addMusic(music,cover,musicFile);
+    public Result addMusic(Music music, MultipartFile coverFile, MultipartFile musicFile){
+        return musicService.addMusic(music,coverFile,musicFile);
     }
 
     //修改音乐
     @PostMapping("/modify")
     public Result modifyMusic(Music music){
-        return null;
+        return musicService.modifyMusic(music);
     }
 
     //删除音乐

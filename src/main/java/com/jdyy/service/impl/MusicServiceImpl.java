@@ -96,20 +96,32 @@ public class MusicServiceImpl implements MusicService {
         Result result;
         try {
             musicMapper.addMusic(music);//插入后获取音乐id到music类中
-
+            String tip = "";//提示
             //上传文件并获取地址
             if (musicFile!=null){
-                String url = (String) upload(musicFile,music).getData();
+                Result uploadResult = upload(musicFile,music,2);
+                if(uploadResult.getCode()!=200){
+                    removeMusic(music);
+                    musicMapper.modifyAutoincrement(musicMapper.getMusicLastId());
+                    return uploadResult;
+                }
+                String url = (String) uploadResult.getData();
                 music.setUrl(url);
             }
             if (cover!=null){
-                String coverURL = (String) upload(cover,music).getData();
+                Result uploadResult = upload(cover,music,1);
+                if(uploadResult.getCode()!=200){
+                    removeMusic(music);
+                    musicMapper.modifyAutoincrement(musicMapper.getMusicLastId());
+                    return uploadResult;
+                }
+                String coverURL = (String) uploadResult.getData();
                 music.setCoverURL(coverURL);
             }
 
             modifyMusic(music);//将文件地址存入到数据库
 
-            result = Result.success(200,"音乐添加成功",null);
+            result = Result.success(200,"音乐添加成功",tip);
         }catch (Exception e){
             e.printStackTrace();
             Map<String, Object> map = new HashMap<>();
@@ -181,11 +193,11 @@ public class MusicServiceImpl implements MusicService {
     //文件上传，不更改文件名
     @Override
     public Result uploadFile(MultipartFile file) {
-        return upload(file,null);
+        return upload(file,null,0);
     }
 
     //音乐文件和音乐封面图片上传
-    public Result upload(MultipartFile file,Music music) {
+    public Result upload(MultipartFile file,Music music,int code) {//code 0为自判定 1为图片 2为音频
         Result result;
         String originFileName = file.getOriginalFilename();//原始文件名
         if (file.isEmpty()){
@@ -205,6 +217,14 @@ public class MusicServiceImpl implements MusicService {
         String[] supportImgSuffix = {".jpg",".png"};//支持的音乐封面图片后缀
         String[] supportAudioSuffix = {".mp3"};//支持的音频后缀
         //判断文件后缀
+
+        //code为1，应为图片时; code为2，应为音频时
+        if(code==1&&!Arrays.stream(supportImgSuffix).toList().contains(fileSuffix)){
+            return Result.fail("文件上传错误，文件类型应为图片");
+        }else if(code==2&&!Arrays.stream(supportAudioSuffix).toList().contains(fileSuffix)){
+            return Result.fail("文件上传错误，文件类型应为音频");
+        }
+
         boolean isImg = false;//是否为图片
         if (Arrays.stream(supportImgSuffix).toList().contains(fileSuffix)){
             isImg = true;

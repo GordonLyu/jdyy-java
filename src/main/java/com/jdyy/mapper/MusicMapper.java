@@ -44,4 +44,21 @@ public interface MusicMapper {
     //删除一首音乐
     @Delete("delete from music where music_id = #{musicId};")
     void removeMusic(Music music);
+
+
+    @Select("SELECT LAST_INSERT_ID() as musicId")
+    int getMusicLastId();
+
+
+    /**
+     * 为了解决添加失败后自增不连续的问题
+     */
+    @Update("alter table music AUTO_INCREMENT=1;")
+    void fixAutoincrement();
+
+    /**
+     * 修改自增
+     */
+    @Update("alter table music AUTO_INCREMENT=#{num};")
+    void modifyAutoincrement(int num);
 }
