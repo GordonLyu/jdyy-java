@@ -19,6 +19,12 @@ import java.util.*;
 /**
  * 音乐 服务实现类
  *
+ * <p>200 通用正常</p>
+ * <p>204 正常，但内容为空</p>
+ * <p>404 异常，未找到</p>
+ * <p>406 异常，内容不支持</p>
+ * <p>500 通用异常</p>
+ *
  * @author LvXinming
  * @since 2022/11/11
  */
@@ -43,7 +49,7 @@ public class MusicServiceImpl implements MusicService {
         try {
             music = musicMapper.getMusicPage(page);
             if (music == null){
-                result = Result.success(201,"没有数据或已经是尾页数据",null);
+                result = Result.success(204,"没有数据或已经是尾页数据",null);
             }else{
                 page.setPageData(music);
                 result = Result.success("获取分页正常",page);
@@ -78,14 +84,12 @@ public class MusicServiceImpl implements MusicService {
         try {
             Music oneMusic = musicMapper.getOneMusic(music);
             if (oneMusic==null){
-                return Result.fail("找不到此音乐");
+                return Result.fail(504,"找不到此音乐",null);
             }
             result = Result.success("成功获取音乐",oneMusic);
         }catch (Exception e){
             e.printStackTrace();
-            Map<String, Object> map = new HashMap<>();
-            map.put("errMsg",e.getMessage());
-            result = Result.fail("获取音乐失败",map);
+            result = Result.fail("获取音乐失败",null);
         }
         return result;
     }
@@ -96,7 +100,6 @@ public class MusicServiceImpl implements MusicService {
         Result result;
         try {
             musicMapper.addMusic(music);//插入后获取音乐id到music类中
-            String tip = "";//提示
             //上传文件并获取地址
             if (musicFile!=null){
                 Result uploadResult = upload(musicFile,music,2);
@@ -121,12 +124,12 @@ public class MusicServiceImpl implements MusicService {
 
             modifyMusic(music);//将文件地址存入到数据库
 
-            result = Result.success(200,"音乐添加成功",tip);
+            Map<String,Object> map = new HashMap<>();
+            map.put("musicAddMsg",music);//返回前端歌曲信息
+            result = Result.success(200,"添加成功",map);
         }catch (Exception e){
             e.printStackTrace();
-            Map<String, Object> map = new HashMap<>();
-            map.put("errMsg",e.getMessage());
-            result = Result.fail("音乐添加失败",map);
+            result = Result.fail("添加失败",null);
         }
         return result;
     }
@@ -149,17 +152,17 @@ public class MusicServiceImpl implements MusicService {
     @Override
     public Result removeMusic(Music music) {
         Result result;
-        Music aMusic = musicMapper.getOneMusic(music);
+        Music oneMusic = musicMapper.getOneMusic(music);
         try {
-            if(aMusic==null)
-                return new Result(501,"删除失败，未找到此音乐");
+            if(oneMusic==null)
+                return new Result(504,"删除失败，未找到此音乐");
             musicMapper.removeMusic(music);
 
             //删除文件
             String relativePath = MusicController.class.getClassLoader().getResource("").getPath();//获取绝对路径
             relativePath = URLDecoder.decode(relativePath, StandardCharsets.UTF_8);//处理字符问题
-            String url = relativePath+"static/"+aMusic.getUrl();//获取音乐文件地址
-            String coverURL = relativePath+"static/"+aMusic.getCoverURL();//获取音乐封面图片地址
+            String url = relativePath+"static/"+oneMusic.getUrl();//获取音乐文件地址
+            String coverURL = relativePath+"static/"+oneMusic.getCoverURL();//获取音乐封面图片地址
 
             File musicFile = new File(url);//获取音乐文件名
             File coverImage = new File(coverURL);//获取音乐封面图片名
@@ -179,7 +182,10 @@ public class MusicServiceImpl implements MusicService {
                 System.out.println("音乐封面不存在");
             }
 
-            result = Result.success(200,"音乐删除成功",fileDeleteMsg);
+            Map<String,Object> map = new HashMap<>();
+            map.put("fileDeleteMsg",fileDeleteMsg);
+            map.put("musicDeleteMsg",oneMusic);
+            result = Result.success(200,"音乐删除成功",map);
         }catch (Exception e){
             e.printStackTrace();
             Map<String, Object> map = new HashMap<>();
@@ -220,9 +226,9 @@ public class MusicServiceImpl implements MusicService {
 
         //code为1，应为图片时; code为2，应为音频时
         if(code==1&&!Arrays.stream(supportImgSuffix).toList().contains(fileSuffix)){
-            return Result.fail("文件上传错误，文件类型应为图片");
+            return Result.fail(406,"文件上传错误，文件类型应为图片",null);
         }else if(code==2&&!Arrays.stream(supportAudioSuffix).toList().contains(fileSuffix)){
-            return Result.fail("文件上传错误，文件类型应为音频");
+            return Result.fail(406,"文件上传错误，文件类型应为音频",null);
         }
 
         boolean isImg = false;//是否为图片
@@ -232,7 +238,7 @@ public class MusicServiceImpl implements MusicService {
         }else if(Arrays.stream(supportAudioSuffix).toList().contains(fileSuffix)){
             path+="audio";
         }else{
-            return Result.fail("不支持此文件");
+            return Result.fail(406,"不支持此文件",null);
         }
 
         //保存文件

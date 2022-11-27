@@ -8,6 +8,7 @@ import com.jdyy.mapper.UserMapper;
 import com.jdyy.service.UserService;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -74,13 +75,14 @@ public class UserServiceImpl implements UserService {
         Result result;
         try {
             userMapper.addUser(user);
-            result = new Result(200,"用户添加成功");
+            result =  Result.success("添加成功",null);
+
         }catch (DuplicateKeyException e){
-            result = Result.fail("添加失败，用户已存在");
+            result = Result.fail(406,"注册失败，用户已存在",null);
             userMapper.fixAutoincrement();
         }catch (Exception e){
             e.printStackTrace();
-            result = Result.fail("用户添加失败");
+            result = Result.fail("注册失败");
             userMapper.fixAutoincrement();
         }
         return result;
@@ -93,22 +95,22 @@ public class UserServiceImpl implements UserService {
         User aUser = userMapper.getOneUser(user);
         try {
             if(aUser==null)
-                return new Result(501,"删除失败，未找到此用户");
+                return new Result(504,"删除失败，未找到此用户");
             userMapper.removeUser(user);
-            result = Result.success("用户删除成功",null);
+            result = Result.success("删除成功",null);
             //删除后ID号自增是否向前呢？这是个问题
 //            userMapper.fixAutoincrement();
         }catch (Exception e){
             e.printStackTrace();
-            result = new Result(500,"用户删除失败");
+            result = new Result(500,"删除失败");
         }
         return result;
     }
 
     //登录
     @Override
-    public Result login(User userLogin) {
-        Result result = null;
+    public Result login(@RequestBody User userLogin) {
+        Result result;
         try {
             User user = userMapper.login(userLogin);
             if (user!=null){
@@ -128,7 +130,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //注册
-    public Result register(User user) {
+    public Result register(@RequestBody User user) {
         Result result;
         try {
             userMapper.addUser(user);

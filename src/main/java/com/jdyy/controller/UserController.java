@@ -25,7 +25,7 @@ public class UserController {
 
     //分页查询用户
     @SaCheckLogin
-    @GetMapping("/getPage")
+    @GetMapping("/page")
     public Result getUserPage(Page<User> page){
         return userService.getUserPage(page);
     }
@@ -39,19 +39,30 @@ public class UserController {
 
     //添加用户
     @SaCheckLogin
-    @PostMapping("/add")
+    @PutMapping("/add")
     public Result addUser(@RequestBody User user){
-        if(user.getPassword().length()<6|user.getPassword().length()>20){
+        if(user.getUsername()==null||"".equals(user.getUsername())){
+            return new Result(500,"用户名不能为空");
+        }else if(user.getUsername().length()<5||user.getUsername().length()>20){
+            return new Result(500,"用户名长度必须在5-16之间");
+        }
+        if(user.getPassword()==null||"".equals(user.getPassword())){
+            return new Result(500,"密码不能为空");
+        }else if(user.getPassword().length()<6||user.getPassword().length()>20){
             return new Result(500,"密码长度必须在6-20之间");
+        }
+
+        //role为空时，则默认为user
+        if ("".equals(user.getRole())||user.getRole()==null){
+            user.setRole("user");
         }
         return userService.addUser(user);
     }
 
     //删除用户
     @SaCheckLogin
-    @PostMapping("/remove")
+    @DeleteMapping("/remove")
     public Result removeUser(Integer uid){
-//        System.out.println(user);
         System.out.println("ID为"+uid);
         User user = new User();
         user.setUid(uid);
@@ -71,12 +82,12 @@ public class UserController {
     //用户注册
     @PostMapping("/register")
     public Result register(@RequestBody User user){
-        if(user.getUsername()==null){
+        if(user.getUsername()==null||"".equals(user.getUsername())){
             return new Result(500,"用户名不能为空");
         }else if(user.getUsername().length()<5||user.getUsername().length()>20){
             return new Result(500,"用户名长度必须在5-16之间");
         }
-        if(user.getPassword()==null){
+        if(user.getPassword()==null||"".equals(user.getPassword())){
             return new Result(500,"密码不能为空");
         }else if(user.getPassword().length()<6||user.getPassword().length()>20){
             return new Result(500,"密码长度必须在6-20之间");
