@@ -52,10 +52,13 @@ import java.io.Serializable;
 
     //失败
     public static Result fail(Object data){
-        return new Result(Status.UNKNOWN_FAIL,data);
+        return new Result(Status.ERROR,data);
     }
     public static Result fail(String message,Object data){
         return new Result(500,message,data);
+    }
+    public static Result fail(int code,String message,Object data){
+        return new Result(code,message,data);
     }
     public static Result fail(String message){
         return new Result(500,message,null);

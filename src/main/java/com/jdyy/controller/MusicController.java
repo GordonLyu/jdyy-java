@@ -37,25 +37,31 @@ public class MusicController {
     }
 
     //分页获取音乐
-    @GetMapping("/getPage")
+    @GetMapping("/page")
     public Result getUserPage(Page<Music> page){
         return musicService.getMusicPage(page);
     }
 
     //添加音乐
-    @PostMapping("/add")
-    public Result addMusic(Music music, MultipartFile cover, MultipartFile musicFile){
-        return musicService.addMusic(music,cover,musicFile);
+    @PutMapping("/add")
+    public Result addMusic(Music music, MultipartFile coverFile, MultipartFile musicFile){
+        if(music.getMusicName()==null||"".equals(music.getMusicName())){
+            return Result.fail("音乐名不能为空");
+        }else if(music.getAuthor()==null||"".equals(music.getAuthor())){
+            return Result.fail("作者不能为空");
+        }
+        System.out.println(music);
+        return musicService.addMusic(music,coverFile,musicFile);
     }
 
     //修改音乐
-    @PostMapping("/modify")
+    @PatchMapping("/modify")
     public Result modifyMusic(Music music){
-        return null;
+        return musicService.modifyMusic(music);
     }
 
     //删除音乐
-    @PostMapping("/remove")
+    @DeleteMapping("/remove")
     public Result removeMusic(Music music){
         return musicService.removeMusic(music);
     }
