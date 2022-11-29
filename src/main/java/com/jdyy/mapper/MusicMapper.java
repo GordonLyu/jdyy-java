@@ -24,9 +24,9 @@ public interface MusicMapper {
     List<Music> getAll();
 
     //获取一首音乐
-    @Select("select * from music where music_id = #{musicId} or music_name = #{musicName};")
+    @Select("select * from music where music_id = #{musicId};")
     @ResultMap({"musicMap"})
-    Music getOneMusic(Music music);
+    Music getOneMusic(Integer musicId);
 
     //获取所有音乐数
     @Select("select count(music_id) from music;")
@@ -43,7 +43,7 @@ public interface MusicMapper {
 
     //删除一首音乐
     @Delete("delete from music where music_id = #{musicId};")
-    void removeMusic(Music music);
+    void removeMusic(Integer musicId);
 
 
     @Select("SELECT LAST_INSERT_ID() as musicId")

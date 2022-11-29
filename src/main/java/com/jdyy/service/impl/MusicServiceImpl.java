@@ -79,10 +79,10 @@ public class MusicServiceImpl implements MusicService {
 
     //获取一首音乐
     @Override
-    public Result getOneMusic(Music music) {
+    public Result getOneMusic(Integer id) {
         Result result;
         try {
-            Music oneMusic = musicMapper.getOneMusic(music);
+            Music oneMusic = musicMapper.getOneMusic(id);
             if (oneMusic==null){
                 return Result.fail(504,"找不到此音乐",null);
             }
@@ -99,12 +99,12 @@ public class MusicServiceImpl implements MusicService {
     public Result addMusic(Music music, MultipartFile cover, MultipartFile musicFile) {
         Result result;
         try {
-            musicMapper.addMusic(music);//插入后获取音乐id到music类中
+            musicMapper.addMusic(music);//插入后获取音乐id到music实体类中
             //上传文件并获取地址
             if (musicFile!=null){
                 Result uploadResult = upload(musicFile,music,2);
                 if(uploadResult.getCode()!=200){
-                    removeMusic(music);
+                    removeMusic(music.getMusicId());
                     musicMapper.modifyAutoincrement(musicMapper.getMusicLastId());
                     return uploadResult;
                 }
@@ -114,7 +114,7 @@ public class MusicServiceImpl implements MusicService {
             if (cover!=null){
                 Result uploadResult = upload(cover,music,1);
                 if(uploadResult.getCode()!=200){
-                    removeMusic(music);
+                    removeMusic(music.getMusicId());
                     musicMapper.modifyAutoincrement(musicMapper.getMusicLastId());
                     return uploadResult;
                 }
@@ -150,13 +150,13 @@ public class MusicServiceImpl implements MusicService {
 
     //删除音乐
     @Override
-    public Result removeMusic(Music music) {
+    public Result removeMusic(Integer mid) {
         Result result;
-        Music oneMusic = musicMapper.getOneMusic(music);
+        Music oneMusic = musicMapper.getOneMusic(mid);
         try {
             if(oneMusic==null)
-                return new Result(504,"删除失败，未找到此音乐");
-            musicMapper.removeMusic(music);
+                return new Result(404,"删除失败，未找到此音乐");
+            musicMapper.removeMusic(mid);
 
             //删除文件
             String relativePath = MusicController.class.getClassLoader().getResource("").getPath();//获取绝对路径

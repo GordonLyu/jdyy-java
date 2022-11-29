@@ -19,6 +19,9 @@
              <if test="musicName!=null and musicName!=''">
                 music_name = #{musicName},
              </if>
+             <if test="author!=null and author!=''">
+                 author = #{author},
+             </if>
              <if test="coverURL!=null and coverURL!=''">
                 cover_url = #{coverURL},
              </if>

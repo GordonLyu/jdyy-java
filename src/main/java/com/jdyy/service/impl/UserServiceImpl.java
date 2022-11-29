@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         try {
             users = userMapper.getUserPage(page);
             if (users == null){
-                result = Result.success(201,"没有数据或已经是尾页数据",null);
+                result = Result.success(204,"没有数据或已经是尾页数据",null);
             }else{
                 page.setPageData(users);
                 result = Result.success("获取分页正常",page);
@@ -75,14 +75,14 @@ public class UserServiceImpl implements UserService {
         Result result;
         try {
             userMapper.addUser(user);
-            result =  Result.success("添加成功",null);
+            result =  Result.success("添加成功");
 
         }catch (DuplicateKeyException e){
-            result = Result.fail(406,"注册失败，用户已存在",null);
+            result = Result.fail(406,"添加失败，用户已存在");
             userMapper.fixAutoincrement();
         }catch (Exception e){
             e.printStackTrace();
-            result = Result.fail("注册失败");
+            result = Result.fail("添加失败");
             userMapper.fixAutoincrement();
         }
         return result;
@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
         User aUser = userMapper.getOneUser(user);
         try {
             if(aUser==null)
-                return new Result(504,"删除失败，未找到此用户");
+                return new Result(404,"删除失败，未找到此用户");
             userMapper.removeUser(user);
             result = Result.success("删除成功",null);
             //删除后ID号自增是否向前呢？这是个问题
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
                 map.put("token",StpUtil.getTokenInfo());//添加token到data
                 result = new Result(200,"登录成功",map);
             }else {
-                result = Result.fail("用户名或密码错误");
+                result = Result.fail(401,"用户名或密码错误");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -134,10 +134,10 @@ public class UserServiceImpl implements UserService {
         Result result;
         try {
             userMapper.addUser(user);
-            result =  Result.success("注册成功",null);
+            result =  Result.success("注册成功");
 
         }catch (DuplicateKeyException e){
-            result = Result.fail("注册失败，用户已存在");
+            result = Result.fail(409,"注册失败，用户已存在");
             userMapper.fixAutoincrement();
         }catch (Exception e){
             e.printStackTrace();

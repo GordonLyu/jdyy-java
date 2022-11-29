@@ -1,6 +1,9 @@
 server:
   port: 8080
 spring:
+  mvc:
+    path match:
+      matching-strategy: path_pattern_parser
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql:///jdyy
@@ -27,3 +30,17 @@ sa-token:
   token-style: uuid
   # 是否输出操作日志
   is-log: false
+
+#swagger
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true # swagger 开启文档显示
+#swagger美化
+knife4j:
+  enable: true # 开启增强
+  production: false #生产模式
+  basic:
+    enable: false # 是否登录
+    username: admin
+    password: 123456
