@@ -20,7 +20,7 @@ public interface MusicService {
     Result findAll();
 
     //获取一首音乐
-    Result getOneMusic(Music music);
+    Result getOneMusic(Integer id);
 
     //添加音乐
     Result addMusic(Music music, MultipartFile cover, MultipartFile musicFile);
@@ -29,7 +29,7 @@ public interface MusicService {
     Result modifyMusic(Music music);
 
     //删除音乐
-    Result removeMusic(Music music);
+    Result removeMusic(Integer mid);
 
 
     //文件上传
