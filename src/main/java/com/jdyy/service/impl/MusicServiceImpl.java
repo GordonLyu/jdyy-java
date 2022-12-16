@@ -220,21 +220,26 @@ public class MusicServiceImpl implements MusicService {
 
         //文件后缀处理
         String fileSuffix = originFileName.substring(originFileName.lastIndexOf('.'));//文件后缀
-        String[] supportImgSuffix = {".jpg",".png"};//支持的音乐封面图片后缀
+        String[] supportImgSuffix = {".jpg",".png",".jpeg"};//支持的音乐封面图片后缀
         String[] supportAudioSuffix = {".mp3"};//支持的音频后缀
         //判断文件后缀
 
         //code为1，应为图片时; code为2，应为音频时
         if(code==1&&!Arrays.stream(supportImgSuffix).toList().contains(fileSuffix)){
-            return Result.fail(406,"文件上传错误，文件类型应为图片",null);
+            return Result.fail(406,"文件上传错误，文件类型应为图片且仅支持："+ Arrays.stream(supportImgSuffix).toList()+" 格式",null);
         }else if(code==2&&!Arrays.stream(supportAudioSuffix).toList().contains(fileSuffix)){
-            return Result.fail(406,"文件上传错误，文件类型应为音频",null);
+            return Result.fail(406,"文件上传错误，文件类型应为音频且仅支持："+ Arrays.stream(supportAudioSuffix).toList()+" 格式",null);
         }
 
         boolean isImg = false;//是否为图片
         if (Arrays.stream(supportImgSuffix).toList().contains(fileSuffix)){
             isImg = true;
             path+="cover";
+
+            //jpeg转为jpg后缀
+            if(fileSuffix.equals(".jpeg")){
+                fileSuffix = ".jpg";
+            }
         }else if(Arrays.stream(supportAudioSuffix).toList().contains(fileSuffix)){
             path+="audio";
         }else{
