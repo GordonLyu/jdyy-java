@@ -24,6 +24,6 @@ public class FileConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         relativePath = URLDecoder.decode(relativePath, StandardCharsets.UTF_8);//处理字符问题
-        registry.addResourceHandler("/music/**").addResourceLocations("file:"+relativePath+"static/music/");
+        registry.addResourceHandler("/**").addResourceLocations("file:"+relativePath+"static/");
     }
 }
