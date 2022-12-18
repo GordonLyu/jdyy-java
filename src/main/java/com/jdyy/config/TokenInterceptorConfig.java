@@ -1,5 +1,6 @@
 package com.jdyy.config;
 
+import cn.dev33.satoken.interceptor.SaInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -18,7 +19,7 @@ public class TokenInterceptorConfig implements WebMvcConfigurer {
     //添加拦截器
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new SaInterceptor())
-//                .addPathPatterns("/**");
+        registry.addInterceptor(new SaInterceptor())
+                .addPathPatterns("/**");
     }
 }

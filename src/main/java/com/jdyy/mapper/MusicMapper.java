@@ -46,15 +46,19 @@ public interface MusicMapper {
     void removeMusic(Integer musicId);
 
 
+    //删除一首音乐和歌单的记录
+    @Delete("delete from music_list where mid = #{musicId} and lid=#{lid};")
+    void removeMusicList(Integer musicId,Integer lid);
+
     @Select("SELECT LAST_INSERT_ID() as musicId")
     int getMusicLastId();
 
 
-    /**
-     * 为了解决添加失败后自增不连续的问题
-     */
-    @Update("alter table music AUTO_INCREMENT=1;")
-    void fixAutoincrement();
+//    /**
+//     * 为了解决添加失败后自增不连续的问题
+//     */
+//    @Update("alter table music AUTO_INCREMENT=1;")
+//    void fixAutoincrement();
 
     /**
      * 修改自增

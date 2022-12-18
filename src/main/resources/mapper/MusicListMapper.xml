@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jdyy.mapper.MusicListMapper" >
+
+    <!--结果别名，对应实体类变量名-->
+    <resultMap id="musicListMap" type="com.jdyy.entity.MusicList">
+        <result column="list_name" property="listName" />
+    </resultMap>
+
+    <!--结果别名，对应实体类变量名-->
+    <resultMap id="musicMap" type="com.jdyy.entity.Music">
+        <id column="music_id" property="musicId" />
+        <result column="music_name" property="musicName" />
+        <result column="cover_url" property="coverURL" />
+    </resultMap>
+
+
+    <update id="modifyMusicList">
+        update list
+        <set>
+            <if test="listName!=null and listName!=''">
+                list_name = #{listName},
+            </if>
+            <if test="creator!=null and creator!=''">
+                creator = #{creator},
+            </if>
+            <if test="cover!=null and cover!=''">
+                cover = #{cover},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                createTime = #{createTime},
+            </if>
+            <if test="detail!=null and detail!=''">
+                detail = #{detail}
+            </if>
+        </set>
+        where lid= #{lid};
+    </update>
+
+</mapper>

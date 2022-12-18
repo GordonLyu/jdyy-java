@@ -28,4 +28,7 @@ public class Music {
 
     @ApiModelProperty("作者")
     private String author;//作者
+
+    @ApiModelProperty("音乐点击数")
+    private int click_number;//音乐点击数
 }

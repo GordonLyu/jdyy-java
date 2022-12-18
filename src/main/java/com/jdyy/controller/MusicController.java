@@ -2,7 +2,9 @@ package com.jdyy.controller;
 
 import com.jdyy.commons.util.Result;
 import com.jdyy.entity.Music;
+import com.jdyy.entity.MusicList;
 import com.jdyy.entity.vo.Page;
+import com.jdyy.service.MusicListService;
 import com.jdyy.service.MusicService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -32,6 +34,7 @@ public class MusicController {
 
     @Resource
     MusicService musicService;
+
 
     //获取所有音乐
     @ApiOperation("获取所有音乐")
@@ -89,7 +92,7 @@ public class MusicController {
             @ApiResponse(responseCode = "500",description = "添加失败")
     })
     @PutMapping("/add")
-    public Result addMusic(@ApiIgnore Music music,@RequestPart("coverFile") MultipartFile coverFile,@RequestPart("musicFile") MultipartFile musicFile){
+    public Result addMusic(@ApiIgnore Music music,@RequestPart(name = "coverFile",required = false) MultipartFile coverFile,@RequestPart(name = "musicFile",required = false) MultipartFile musicFile){
         if(music.getMusicName()==null||"".equals(music.getMusicName())){
             return Result.fail("音乐名不能为空");
         }else if(music.getAuthor()==null||"".equals(music.getAuthor())){
