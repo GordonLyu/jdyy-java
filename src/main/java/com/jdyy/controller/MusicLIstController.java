@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 
@@ -85,6 +84,22 @@ public class MusicLIstController {
         return musicListService.addMusicList(musicList,coverFile);
     }
 
+    //添加一首音乐进歌单
+    @ApiOperation("添加一首音乐进歌单")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",name = "listName",value = "歌单名",required = true),
+            @ApiImplicitParam(paramType = "query",name = "creator",value = "创建者",required = true),
+            @ApiImplicitParam(paramType = "formData",name = "coverFile",value = "封面",dataType = "File"),
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",description = "添加成功"),
+            @ApiResponse(responseCode = "406",description = "文件格式错误或不支持"),
+            @ApiResponse(responseCode = "500",description = "添加失败")
+    })
+    @PutMapping("/addMusic")
+    public Result addMusicToList(Integer lid, Integer mid){
+        return musicListService.addMusicToList(lid, mid);
+    }
 
 
 
@@ -118,6 +133,22 @@ public class MusicLIstController {
     public Result removeMusicList(Integer lid){
         return musicListService.removeMusicList(lid);
     }
+
+
+    //删除一首音乐和歌单的记录
+    @ApiOperation("删除一首音乐和歌单的记录")
+    @ApiImplicitParam(name = "lid",value = "歌单ID",required = true)
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",description = "删除成功"),
+            @ApiResponse(responseCode = "404",description = "未找到歌单"),
+            @ApiResponse(responseCode = "500",description = "删除失败")
+    })
+    @DeleteMapping("/removeMusic")
+    public Result removeMusicList(Integer lid,Integer mid){
+        return musicListService.removeMusicInList(lid, mid);
+    }
+
+
 
     //分页利用歌单id获取当前歌单的音乐
     @ApiOperation("分页获取音乐")
