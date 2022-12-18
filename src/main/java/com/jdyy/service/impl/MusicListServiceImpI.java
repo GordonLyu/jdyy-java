@@ -114,7 +114,7 @@ public class MusicListServiceImpI implements MusicListService {
     }
 
 
-    //删除音乐
+    //删除歌单
     @Override
     public Result removeMusicList(Integer lid) {
         Result result;
@@ -155,6 +155,22 @@ public class MusicListServiceImpI implements MusicListService {
 
 
 
+    //删除一首音乐和歌单的记录
+    @Override
+    public Result removeMusicInList(Integer lid, Integer mid) {
+        Result result;
+        try {
+            musicListMapper.removeMusicInList(lid, mid);
+            result = Result.success("歌单中成功删除音乐",null);
+        }catch (Exception e){
+            e.printStackTrace();
+            result = Result.fail("歌单中删除音乐失败",null);
+        }
+        return result;
+    }
+
+
+
     //修改一条歌单
     public Result modifyMusicList(MusicList musicList){
         Result result;
@@ -169,6 +185,21 @@ public class MusicListServiceImpI implements MusicListService {
         return result;
     }
 
+
+
+    //添加一首音乐进歌单
+    @Override
+    public Result addMusicToList(Integer lid, Integer mid) {
+        Result result;
+        try {
+            musicListMapper.addMusicToList(lid, mid);
+            result = Result.success("已添加音乐到歌单",null);
+        }catch (Exception e){
+            e.printStackTrace();
+            result = Result.fail("添加失败");
+        }
+        return result;
+    }
 
     //添加歌单
     @Override

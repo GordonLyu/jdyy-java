@@ -4,6 +4,7 @@ import com.jdyy.commons.util.Result;
 import com.jdyy.controller.MusicController;
 import com.jdyy.entity.Music;
 import com.jdyy.entity.vo.Page;
+import com.jdyy.mapper.MusicListMapper;
 import com.jdyy.mapper.MusicMapper;
 import com.jdyy.service.MusicService;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 音乐 服务实现类
@@ -33,6 +37,9 @@ public class MusicServiceImpl implements MusicService {
 
     @Resource
     MusicMapper musicMapper;
+
+    @Resource
+    MusicListMapper musicListMapper;
 
     //分页查询
     @Override
@@ -96,7 +103,7 @@ public class MusicServiceImpl implements MusicService {
 
     //添加音乐
     @Override
-    public Result addMusic(Music music, MultipartFile cover, MultipartFile musicFile) {
+    public Result addMusic(Music music, MultipartFile cover, MultipartFile musicFile,Integer lid) {
         Result result;
         try {
             musicMapper.addMusic(music);//插入后获取音乐id到music实体类中
@@ -123,7 +130,9 @@ public class MusicServiceImpl implements MusicService {
             }
 
             modifyMusic(music);//将文件地址存入到数据库
-
+            if(lid!=null){
+                musicListMapper.addMusicToList(lid,music.getMusicId());//同时添加进歌单
+            }
             Map<String,Object> map = new HashMap<>();
             map.put("musicAddMsg",music);//返回前端歌曲信息
             result = Result.success(200,"添加成功",map);

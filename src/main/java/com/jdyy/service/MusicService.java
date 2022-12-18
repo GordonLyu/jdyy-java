@@ -23,7 +23,7 @@ public interface MusicService {
     Result getOneMusic(Integer id);
 
     //添加音乐
-    Result addMusic(Music music, MultipartFile cover, MultipartFile musicFile);
+    Result addMusic(Music music, MultipartFile cover, MultipartFile musicFile,Integer lid);
 
     //修改一首音乐
     Result modifyMusic(Music music);

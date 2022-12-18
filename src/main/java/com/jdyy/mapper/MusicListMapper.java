@@ -1,6 +1,5 @@
 package com.jdyy.mapper;
 
-import com.jdyy.commons.util.Result;
 import com.jdyy.entity.Music;
 import com.jdyy.entity.MusicList;
 import com.jdyy.entity.vo.Page;
@@ -36,6 +35,10 @@ public interface MusicListMapper {
     @Select("SELECT max(lid) from list;" )
     int getLid();
 
+    //添加一首音乐进歌单
+    @Insert("insert into music_list values(#{lid},#{mid})")
+    void addMusicToList(Integer lid,Integer mid);
+
 
     //获取一条歌单
     @Select("select * from list where lid = #{lid};")
@@ -50,6 +53,10 @@ public interface MusicListMapper {
     @Delete("delete from list where lid = #{lid};")
     void removeMusicList(Integer lid);
 
+
+    //删除一首音乐和歌单的记录
+    @Delete("delete from music_list where lid = #{lid} and mid=#{mid};")
+    void removeMusicInList(Integer lid,Integer mid);
 
 
     //获取所有音乐数
