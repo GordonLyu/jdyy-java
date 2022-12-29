@@ -1,8 +1,10 @@
 package com.jdyy.mapper;
 
+import com.jdyy.commons.util.Result;
 import com.jdyy.entity.User;
 import com.jdyy.entity.vo.Page;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
@@ -23,6 +25,11 @@ public interface UserMapper {
 
     //查询所有
     List<User> getAll();
+
+
+    //根据Id获取所有用户
+    @Select("select * from user where uid = #{uid};")
+    List<User> getUserById(Integer uid);
 
     //查一个用户
     User getOneUser(User user);

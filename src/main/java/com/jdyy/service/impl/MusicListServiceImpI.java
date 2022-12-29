@@ -121,8 +121,9 @@ public class MusicListServiceImpI implements MusicListService {
         MusicList oneMusicList = musicListMapper.getOneMusicList(lid);
         try {
             if(oneMusicList==null)
-                return new Result(404,"删除失败，未找到此音乐");
+                return new Result(404,"删除失败，未找到此歌单");
             musicListMapper.removeMusicList(lid);
+            musicListMapper.removeListRecord(lid);
 
             //删除文件
             String relativePath = MusicController.class.getClassLoader().getResource("").getPath();//获取绝对路径
@@ -133,22 +134,22 @@ public class MusicListServiceImpI implements MusicListService {
             File coverImage = new File(coverURL);//获取音乐封面图片名
             String fileDeleteMsg = "文件删除情况：";
             if(coverImage.delete()){
-                fileDeleteMsg += "，音乐封面删除成功";
-                System.out.println("音乐封面删除成功");
+                fileDeleteMsg += "，歌单封面删除成功";
+                System.out.println("歌单封面删除成功");
             }else{
-                fileDeleteMsg += "，音乐封面不存在";
-                System.out.println("音乐封面不存在");
+                fileDeleteMsg += "，歌单封面不存在";
+                System.out.println("歌单封面不存在");
             }
 
             Map<String,Object> map = new HashMap<>();
             map.put("fileDeleteMsg",fileDeleteMsg);
             map.put("musicDeleteMsg",oneMusicList);
-            result = Result.success(200,"音乐删除成功",map);
+            result = Result.success(200,"歌单删除成功",map);
         }catch (Exception e){
             e.printStackTrace();
             Map<String, Object> map = new HashMap<>();
             map.put("errMsg",e.getMessage());
-            result = Result.fail("音乐删除失败",map);
+            result = Result.fail("歌单删除失败",map);
         }
         return result;
     }

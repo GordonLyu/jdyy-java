@@ -9,6 +9,7 @@
     <id column="music_id" property="musicId" />
     <result column="music_name" property="musicName" />
     <result column="cover_url" property="coverURL" />
+    <result column="click_number" property="clickNumber" />
 </resultMap>
 
 

@@ -58,6 +58,10 @@ public interface MusicListMapper {
     @Delete("delete from music_list where lid = #{lid} and mid=#{mid};")
     void removeMusicInList(Integer lid,Integer mid);
 
+    //删除一首歌单的记录
+    @Delete("delete from music_list where lid = #{lid};")
+    void removeListRecord(Integer lid);
+
 
     //获取所有音乐数
     @Select("select count(*) from list;")

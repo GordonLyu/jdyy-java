@@ -60,6 +60,18 @@ public class UserController {
         return userService.findAll();
     }
 
+    //根据Id获取所有用户
+    @ApiOperation("根据Id获取所有用户")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",description = "获取正常"),
+            @ApiResponse(responseCode = "500",description = "获取异常")
+    })
+    @SaCheckLogin
+    @GetMapping("/getUserById")
+    public Result getUserById(Integer uid){
+        return userService.getUserById(uid);
+    }
+
     //添加用户
     @ApiOperation("添加用户")
     @ApiImplicitParams({

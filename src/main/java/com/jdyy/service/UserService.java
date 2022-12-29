@@ -29,4 +29,7 @@ public interface UserService {
 
     //注册
     Result register(User userLogin);
+
+    //根据Id获取所有用户
+    Result getUserById(Integer uid);
 }

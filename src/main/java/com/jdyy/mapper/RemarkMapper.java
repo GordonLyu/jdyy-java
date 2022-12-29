@@ -30,7 +30,7 @@ public interface RemarkMapper {
     Integer countRemarkByUser(Integer uid);
 
     //通过音乐ID查询评论
-    @Select("select * from remark where mid = #{mid}")
+    @Select("select * from remark where mid = #{mid} order by remark_time desc")
     List<Remark> getRemarkByMusic(Integer mid);
 
     //通过用户ID查询评论
@@ -46,7 +46,7 @@ public interface RemarkMapper {
     List<Remark> getRemarkPageByUser(Integer uid, Page<Remark> page);
 
     //添加评论
-    @Insert("insert into remark (mid, uid, content) values(#{mid},#{uid},#{content})")
+    @Insert("insert into remark (mid, uid,username, content) values(#{mid},#{uid},#{username},#{content})")
     void addRemark(Remark remark);
 
     //删除评论

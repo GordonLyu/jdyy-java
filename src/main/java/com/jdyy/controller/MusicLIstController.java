@@ -121,7 +121,7 @@ public class MusicLIstController {
         return musicListService.modifyMusicList(musicList);
     }
 
-    //删除音乐
+    //删除歌单
     @ApiOperation("删除歌单")
     @ApiImplicitParam(name = "lid",value = "歌单ID",required = true)
     @ApiResponses({

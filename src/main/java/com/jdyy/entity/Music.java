@@ -15,7 +15,7 @@ import lombok.ToString;
 @ToString
 public class Music {
     @ApiModelProperty("音乐ID")
-    private int musicId;//音乐ID
+    private Integer musicId;//音乐ID
 
     @ApiModelProperty("音乐名")
     private String musicName;//音乐名
@@ -30,5 +30,5 @@ public class Music {
     private String author;//作者
 
     @ApiModelProperty("音乐点击数")
-    private int click_number;//音乐点击数
+    private Integer clickNumber;//音乐点击数
 }

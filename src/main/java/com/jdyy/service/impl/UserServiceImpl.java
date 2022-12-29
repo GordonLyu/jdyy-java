@@ -6,6 +6,7 @@ import com.jdyy.entity.User;
 import com.jdyy.entity.vo.Page;
 import com.jdyy.mapper.UserMapper;
 import com.jdyy.service.UserService;
+import io.swagger.models.auth.In;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -68,6 +69,19 @@ public class UserServiceImpl implements UserService {
         }
         return result;
     }
+    //根据Id获取所有用户
+    @Override
+    public Result getUserById(Integer uid) {
+        Result result;
+        try {
+            List<User> users = userMapper.getUserById(uid);
+            result = Result.success(200,"成功获取uid为"+uid+"的用户",users);
+        }catch (Exception e){
+            e.printStackTrace();
+            result = Result.fail("获取用户失败");
+        }
+        return result;
+    }
 
     //添加用户
     @Override
@@ -118,6 +132,7 @@ public class UserServiceImpl implements UserService {
                 Map<String, Object> map = new HashMap<>();
                 map.put("user",user);//添加用户信息到data
                 map.put("token",StpUtil.getTokenInfo());//添加token到data
+//                System.out.println(map.get("token"));
                 result = new Result(200,"登录成功",map);
             }else {
                 result = Result.fail(401,"用户名或密码错误");

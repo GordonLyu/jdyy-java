@@ -23,6 +23,9 @@ public class Remark {
     @Schema(description = "用户ID")
     private Integer uid;
 
+    @Schema(description = "用户名")
+    private String username;
+
     @Schema(description = "评论内容")
     private String content;
 

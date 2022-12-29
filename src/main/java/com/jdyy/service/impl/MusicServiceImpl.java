@@ -81,6 +81,7 @@ public class MusicServiceImpl implements MusicService {
             map.put("errMsg",e.getMessage());
             result = Result.fail("获取所有音乐失败",map);
         }
+        System.out.println(result);
         return result;
     }
 
